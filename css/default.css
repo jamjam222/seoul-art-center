@@ -1,0 +1,12 @@
+@charset "utf-8";
+
+.fp-auto-height.fp-section,
+.fp-auto-height .fp-slide,
+.fp-auto-height .fp-tableCell {
+    height: auto !important;
+}
+ 
+.short-con {
+    height: 142px;
+    background-color: #555555;
+}
