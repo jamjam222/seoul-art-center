@@ -10,7 +10,10 @@
     <link rel="stylesheet" type="text/css"
         href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.0.6/swiper-bundle.css" />
     <link rel="stylesheet" type="text/css" href="examples.css" />
+    <!-- Link Swiper's CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
     <link rel="stylesheet" href="css/main.css">
+
 
     <script src="lib/jquery-3.7.0.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
@@ -18,38 +21,66 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/2.9.7/jquery.fullpage.min.js"></script>
     <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.0.6/swiper-bundle.min.js"></script>
-
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script>
+
+
+
         $(function () {
-            /*********** fullpage ************/
-            $(document).ready(function () {
-                // fullpage
-                $('#fullpage').fullpage({
-                    anchors: ['sec2', 'sec3', 'sec4'],
-                    menu: '#menu',
-                    scrollingSpeed: 800,
-                    // scrollBar: true,
-                    onLeave: function (origin, destination, direction) {
-                        // 빠른전환으로 이벤트중복시 fullpage와 swiper전환시점 분리막기
-                        $('#fullpage').on('scroll touchmove mousewheel', function (event) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                            return false;
-                        });
-                        swiper.mousewheel.disable();
+
+            var swiper = new Swiper(".mySwiper", {
+                slidesPerView: 1,
+                spaceBetween: 10,
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                },
+                grabCursor: true,
+                breakpoints: {
+                    534: {
+                        slidesPerView: 2,
+                        spaceBetween: 18,
                     },
-                    afterLoad: function (anchorLink, index) {
-                        // 전환이 끝난후 이벤트풀기                               
-                        $('#fullpage').off('scroll mousewheel');
-                        if (!$(".fp-completely .swiper-wrapper").length > 0) $('#fullpage').off('touchmove'); // 모바일분기
-                        if (swiper) swiper.mousewheel.enable();
-                        if (!$(".sec2").hasClass("active")) $.fn.fullpage.setAllowScrolling(true); // 슬라이드 섹션을 벗어나면 휠풀어주기
-                    }
-
-                });
+                    1024: {
+                        slidesPerView: 5,
+                        spaceBetween: 10,
+                    },
+                },
+            });
 
 
-                // swiper
+
+
+            // fullpage
+            $('#fullpage').fullpage({
+                anchors: ['sec2', 'sec3', 'sec4'],
+                menu: '#menu',
+                scrollingSpeed: 800,
+                responsiveWidth: 960,
+                onLeave: function (origin, destination, direction) {
+                    // 빠른전환으로 이벤트중복시 fullpage와 swiper전환시점 분리막기
+                    $('#fullpage').on('scroll touchmove mousewheel', function (event) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        return false;
+                    });
+                    swiper.mousewheel.disable();
+                },
+                afterLoad: function (anchorLink, index) {
+                    // 전환이 끝난후 이벤트풀기                               
+                    $('#fullpage').off('scroll mousewheel');
+                    if (!$(".fp-completely .swiper-wrapper").length > 0) $('#fullpage').off('touchmove'); // 모바일분기
+                    if (swiper) swiper.mousewheel.enable();
+                    if (!$(".sec2").hasClass("active")) $.fn.fullpage.setAllowScrolling(true); // 슬라이드 섹션을 벗어나면 휠풀어주기
+                }
+
+            });
+
+
+            // swiper
+            let ww = $(window).width();
+            if (ww > 960) {
                 var length = $(".sec3 .swiper-slide").length;
                 var swiper = new Swiper('.swiper-container', {
                     slidesPerView: 1,
@@ -58,11 +89,14 @@
                     freeMode: false,
                     allowTouchMove: false,
                     speed: 1000,
-                    pagination: {
-                        el: '.swiper-pagination',
-                        clickable: true,
-                    },
+
                     mousewheel: true,
+                    /*   breakpoints: {
+                          640: {
+                              mousewheel:false
+                          },
+                        
+                      }, */
                     on: {
                         slideChange: function () {
                             var idx = this.activeIndex;
@@ -86,13 +120,18 @@
                         },
                     },
                 });
-            });
+            } else if (ww < 960) {
 
-        })
+            }
 
 
-        /*  */
-        window.onload = function () {
+
+
+
+
+
+
+
 
             //모바일메뉴
             let mobileBtn = $('.menu_icon')
@@ -122,32 +161,8 @@
                     })
                 }
             })//mobileBtn.click end
+        });
 
-
-            let noteFolio = document.querySelector('.concert')
-            let list = noteFolio.querySelector('.list');
-            let itemLength = noteFolio.querySelectorAll('.item').length
-            let scrollWrap = noteFolio.querySelector('.scroll_wrap')
-            let widthWrap = 342 * itemLength;
-            list.style.width = widthWrap + 'px'
-            list.style.height = widthWrap + 'px'
-
-            scrollWrap.style.width = widthWrap + 'px'
-            console.log(list.clientWidth)
-
-            //scrollWrap.clientWidth(widthWrap)
-
-            //noteFolio.addEventListener('wheel', function () {
-            // => noteFolio.mousewheel = function(){}
-            //mousewheel은 비표준이며 wheel로 바뀌었음.
-
-            noteFolio.addEventListener('wheel', function () {
-                var scr = scrollWrap.scrollTop;
-                console.log(scr)
-                list.style.left = -scr + 'px';
-            })
-
-        };
     </script>
 </head>
 
@@ -171,107 +186,117 @@
                             <a href="#">VIEW MORE</a>
                         </div>
                     </div><!-- .title end -->
-
-                    <div class="scroll_wrap">
-                        <div class="list">
-                            <div class="item">
-                                <a href="#">
-                                    <img src="img/concert1.jpg" alt="돈키호테">
-                                    <strong>유니버설발레단 <돈키호테></strong>
-                                    <p>2023.10.06(금) ~ 2023.10.08(일)</p>
-                                </a>
-                            </div><!-- .item end -->
-
-                            <div class="item">
-                                <a href="#">
-                                    <img src="img/concert2.jpg" alt="로미오와 줄리엣">
-                                    <strong>모나코-몬테카를로 발레단 <br>
-                                        <로미오와 줄리엣>
-                                    </strong>
-                                    <p>2023.10.13(금) ~ 2023.10.15(일)</p>
-                                </a>
-                            </div><!-- .item end -->
-
-                            <div class="item">
-                                <a href="#">
-                                    <img src="img/concert3.jpg" alt="이은결">
-                                    <strong>이은결 [더 일루션 - 마스터피스]</strong>
-                                    <p>2023.10.06(금) ~ 2023.10.22(일)</p>
-                                </a>
-                            </div><!-- .item end -->
-
-                            <div class="item">
-                                <a href="#">
-                                    <img src="img/concert4.jpg" alt="바닷마을">
-                                    <strong>바닷마을 다이어리</strong>
-                                    <p> 2023.10.08(일) ~ 2023.11.19(일)</p>
-                                </a>
-                            </div><!-- .item end -->
-
-                            <div class="item">
-                                <a href="#">
-                                    <img src="img/concert5.jpg" alt="콘체르토">
-                                    <strong>콘체르토 마라톤 프로젝트 - <br>신창용의 프로코피예프 피아노 협주곡</strong>
-                                    <p>2023.09.20(수) 19:30</p>
-                                </a>
-                            </div><!-- .item end -->
-
-                            <div class="item">
-                                <a href="#">
-                                    <img src="img/concert8.jpg" alt="이승원">
-                                    <strong>예술의전당 전관 개관 30주년 특별 음악회 - 이승원 & 서울시립교향악단</strong>
-                                    <p>2023.09.21(목) 19:30</p>
-                                </a>
-                            </div><!-- .item end -->
-
-                            <div class="item">
-                                <a href="#">
-                                    <img src="img/concert9.jpg" alt="장한나">
-                                    <strong>장한나 & 미샤 마이스키 <br>with 디토 오케스트라(23일)</strong>
-                                    <p>2023.09.23(토) 17:00</p>
-                                </a>
-                            </div><!-- .item end -->
-
-                            <div class="item">
-                                <a href="#">
-                                    <img src="img/concert7.jpg" alt="필하모닉">
-                                    <strong>런던 필하모닉</strong>
-                                    <p>2023.10.07(토)</p>
-                                </a>
-                            </div><!-- .item end -->
-
-                            <div class="item">
-                                <a href="#">
-                                    <img src="img/concert12.jpg" alt="필하모닉">
-                                    <strong>제5회 어텀실내악페스티벌 <완성> - I
-                                    </strong>
-                                    <p>2023.09.21(목)</p>
-                                </a>
-                            </div><!-- .item end -->
-
-                            <div class="item">
-                                <a href="#">
-                                    <img src="img/concert10.jpg" alt="필하모닉">
-                                    <strong>취리히 톤할레 오케스트라</strong>
-                                    <p>2023.10.13(금)</p>
-                                </a>
-                            </div><!-- .item end -->
-
-                            <div class="item">
-                                <a href="#">
-                                    <img src="img/concert11.jpg" alt="필하모닉">
-                                    <strong>2023 서울국제음악제 폐막음악회 : SIMF오케스트라 with 바실리 페트렌코</strong>
-                                    <p>2023.10.14(토)</p>
-                                </a>
-                            </div><!-- .item end -->
-
-
-                        </div><!-- .list end -->
-                    </div><!-- .scroll_wrap end -->
+                    <div class="swiper mySwiper">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <div class="item">
+                                    <a href="#">
+                                        <img src="img/concert1.jpg" alt="돈키호테">
+                                        <strong>유니버설발레단 <돈키호테></strong>
+                                        <p>2023.10.06(금) ~ 2023.10.08(일)</p>
+                                    </a>
+                                </div><!-- .item end -->
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="item">
+                                    <a href="#">
+                                        <img src="img/concert2.jpg" alt="로미오와 줄리엣">
+                                        <strong>모나코-몬테카를로 발레단 <br>
+                                            <로미오와 줄리엣>
+                                        </strong>
+                                        <p>2023.10.13(금) ~ 2023.10.15(일)</p>
+                                    </a>
+                                </div><!-- .item end -->
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="item">
+                                    <a href="#">
+                                        <img src="img/concert3.jpg" alt="이은결">
+                                        <strong>이은결 [더 일루션 - 마스터피스]</strong>
+                                        <p>2023.10.06(금) ~ 2023.10.22(일)</p>
+                                    </a>
+                                </div><!-- .item end -->
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="item">
+                                    <a href="#">
+                                        <img src="img/concert4.jpg" alt="바닷마을">
+                                        <strong>바닷마을 다이어리</strong>
+                                        <p> 2023.10.08(일) ~ 2023.11.19(일)</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="item">
+                                    <a href="#">
+                                        <img src="img/concert5.jpg" alt="콘체르토">
+                                        <strong>콘체르토 마라톤 프로젝트 - <br>신창용의 프로코피예프 피아노 협주곡</strong>
+                                        <p>2023.09.20(수) 19:30</p>
+                                    </a>
+                                </div><!-- .item end -->
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="item">
+                                    <a href="#">
+                                        <img src="img/concert8.jpg" alt="이승원">
+                                        <strong>예술의전당 전관 개관 30주년 특별 음악회 - <br>이승원 & 서울시립교향악단</strong>
+                                        <p>2023.09.21(목) 19:30</p>
+                                    </a>
+                                </div><!-- .item end -->
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="item">
+                                    <a href="#">
+                                        <img src="img/concert9.jpg" alt="장한나">
+                                        <strong>장한나 & 미샤 마이스키 <br>with 디토 오케스트라(23일)</strong>
+                                        <p>2023.09.23(토) 17:00</p>
+                                    </a>
+                                </div><!-- .item end -->
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="item">
+                                    <a href="#">
+                                        <img src="img/concert7.jpg" alt="필하모닉">
+                                        <strong>런던 필하모닉</strong>
+                                        <p>2023.10.07(토)</p>
+                                    </a>
+                                </div><!-- .item end -->
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="item">
+                                    <a href="#">
+                                        <img src="img/concert12.jpg" alt="필하모닉">
+                                        <strong>제5회 어텀실내악페스티벌 <완성> - I
+                                        </strong>
+                                        <p>2023.09.21(목)</p>
+                                    </a>
+                                </div><!-- .item end -->
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="item">
+                                    <a href="#">
+                                        <img src="img/concert10.jpg" alt="필하모닉">
+                                        <strong>취리히 톤할레 오케스트라</strong>
+                                        <p>2023.10.13(금)</p>
+                                    </a>
+                                </div><!-- .item end -->
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="item">
+                                    <a href="#">
+                                        <img src="img/concert11.jpg" alt="필하모닉">
+                                        <strong>2023 서울국제음악제 폐막음악회 : SIMF오케스트라 with 바실리 페트렌코</strong>
+                                        <p>2023.10.14(토)</p>
+                                    </a>
+                                </div><!-- .item end -->
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
                 </section><!-- .concert end -->
             </div>
 
-            <div class="section sec3">
+            <div class="section sec3 pc">
                 <div class="swiper-container">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide slide1">
@@ -317,10 +342,10 @@
                                             <a href="#">VIEW MORE</a>
                                         </div>
                                     </div><!-- .text end -->
+                                    <video autoplay muted loop>
+                                        <source src="img/main_visual.mp4" type="video/mp4" />
+                                    </video>
                                 </div><!-- .inner end -->
-                                <video autoplay muted loop>
-                                    <source src="img/main_visual.mp4" type="video/mp4" />
-                                </video>
                             </section><!-- .music end -->
                         </div><!-- .swiper-slide .music -->
                         <div class="swiper-slide">
@@ -396,10 +421,10 @@
                             </section><!-- .sns end -->
                         </div><!-- .swiper-slide -->
                     </div>
-                    <!-- Add Pagination -->
-                    <div class="swiper-pagination"></div>
                 </div>
             </div>
+
+
 
             <div class="section sec4">
                 <section class="notice">
@@ -422,7 +447,8 @@
                                 2023.08.25
                             </strong>
                             <figure>
-                                <img src="img/bu-move-arrow-white.png" alt="">
+                                <img src="img/notice_arrow_W.png" alt="">
+                                <img src="img/notice_arrow_B.png" alt="">
                             </figure>
 
                         </div><!-- .list end -->
@@ -438,7 +464,8 @@
                                 2023.08.11
                             </strong>
                             <figure>
-                                <img src="img/bu-move-arrow-white.png" alt="">
+                                <img src="img/notice_arrow_W.png" alt="">
+                                <img src="img/notice_arrow_B.png" alt="">
                             </figure>
                         </div><!-- .list end -->
 
@@ -451,7 +478,8 @@
                             </div>
                             <strong>2023.09.14</strong>
                             <figure>
-                                <img src="img/bu-move-arrow-white.png" alt="">
+                                <img src="img/notice_arrow_W.png" alt="">
+                                <img src="img/notice_arrow_B.png" alt="">
                             </figure>
                         </div><!-- .list end -->
 
@@ -466,7 +494,8 @@
                                 2023.09.12
                             </strong>
                             <figure>
-                                <img src="img/bu-move-arrow-white.png" alt="">
+                                <img src="img/notice_arrow_W.png" alt="">
+                                <img src="img/notice_arrow_B.png" alt="">
                             </figure>
                         </div><!-- .list end -->
 
@@ -482,7 +511,8 @@
                                 2023.09.06
                             </strong>
                             <figure>
-                                <img src="img/bu-move-arrow-white.png" alt="">
+                                <img src="img/notice_arrow_W.png" alt="">
+                                <img src="img/notice_arrow_B.png" alt="">
                             </figure>
                         </div><!-- .list end -->
                     </div><!-- .inner end -->
@@ -561,25 +591,22 @@
                     </ul><!-- .family_site end -->
                     <ul class="contact">
                         <li class="border_white m8"></li>
-                        <li id="TM10" style="text-align:center;  line-height:1.6;">
+                        <li id="TM10">
                             <dl>
-                                <dt><img src="/storage/kkbyssKR/www/frontstore/default_10/KR/Frontend//pcimg/icon_tel.png"
-                                        alt="" style="vertical-align:middle"></dt>
-                                <dd>+82-2-542-1526</dd>
+                                <dt><img src="img/icon_tel.png" alt="" style="vertical-align:middle"></dt>
+                                <dd>1668-1352</dd>
                             </dl>
                             <dl>
-                                <dt><img src="/storage/kkbyssKR/www/frontstore/default_10/KR/Frontend//pcimg/icon_fax.png"
-                                        alt="" style="vertical-align:middle"></dt>
-                                <dd>+82-2-553-1527</dd>
+                                <dt><img src="img/icon_fax.png" alt="" style="vertical-align:middle"></dt>
+                                <dd>580-1504</dd>
                             </dl>
                             <dl style="width:64%;" :>
-                                <dt><img src="/storage/kkbyssKR/www/frontstore/default_10/KR/Frontend//pcimg/icon_mail.png"
-                                        alt="" style="vertical-align:middle"></dt>
-                                <dd>leedongwook.home@gmail.com</dd>
+                                <dt><img src="img/icon_mail.png" alt="" style="vertical-align:middle"></dt>
+                                <dd> sacoperarent@sac.or.kr</dd>
                             </dl>
                         </li>
-                        <li class="bt_address" style="position:absolute; bottom:40px; width:100%;">서울특별시 강남구 삼성로146길
-                            4-5, 3층 킹콩 by 스타쉽 (06070)</li>
+                        <li class="bt_address" style="position:absolute; bottom:40px; width:100%;">(우) 06757 서울시 서초구
+                            남부순환로 2406 예술의전당</li>
                     </ul>
                     <div class="back"></div>
                 </nav><!-- .pc_gnb end -->
